@@ -1,0 +1,3 @@
+[
+ {"id":"first_survivor","name":"First Survivor","rule":"survived"},{"id":"zero_debt","name":"Zero Debt","rule":"zero_debt"},{"id":"emergency_ready","name":"Emergency Ready","rule":"reserve"},{"id":"frugal_student","name":"Frugal Student","rule":"frugal"},{"id":"financial_master","name":"Financial Master","rule":"master"},{"id":"no_wants","name":"No Wants","rule":"no_wants"},{"id":"big_saver","name":"Big Saver","rule":"saver"},{"id":"perfect_month","name":"Perfect Month","rule":"perfect"},{"id":"risk_taker","name":"Risk Taker","rule":"survived"},{"id":"thirty_days","name":"30 Days Survived","rule":"survived"}
+]
