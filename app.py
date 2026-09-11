@@ -4,8 +4,14 @@ import plotly.express as px
 from datetime import date
 
 st.set_page_config(page_title="Finly", page_icon="💸", layout="wide")
-st.markdown("""<style>.stApp{background:radial-gradient(circle at 12% 8%,#243c7d,transparent 30%),radial-gradient(circle at 88% 12%,#146458,transparent 28%),#0b1020}.block-container{max-width:1150px;padding-top:2rem}.hero{padding:2rem;border-radius:24px;background:linear-gradient(120deg,rgba(64,90,190,.38),rgba(17,180,145,.22));margin-bottom:1.2rem}.hero h1{margin:0;color:white;font-size:2.5rem}.hero p{color:#d4ddf7}.stMetric{background:#16203a}</style>""",unsafe_allow_html=True)
+st.markdown("""<style>.stApp{background:radial-gradient(circle at 12% 8%,#243c7d,transparent 30%),radial-gradient(circle at 88% 12%,#146458,transparent 28%),#0b1020}.block-container{max-width:1150px;padding-top:2rem}.hero{padding:2rem;border-radius:24px;background:linear-gradient(120deg,rgba(64,90,190,.38),rgba(17,180,145,.22));margin-bottom:1.2rem}.hero h1{margin:0;color:white;font-size:2.5rem}.hero p{color:#d4ddf7}</style>""",unsafe_allow_html=True)
 st.session_state.setdefault("records",[])
+st.session_state.setdefault("opening_balance",0.0)
+with st.sidebar:
+ st.header("Settings")
+ st.session_state.opening_balance=st.number_input("Opening balance",min_value=0.0,value=float(st.session_state.opening_balance),step=50000.0,format="%.0f")
+ if st.button("Reset all records"):
+  st.session_state.records=[];st.rerun()
 st.markdown("<div class='hero'><h1>💸 Finly</h1><p>Track every rupiah you earn and spend.</p></div>",unsafe_allow_html=True)
 with st.form("entry",clear_on_submit=True):
  c1,c2,c3=st.columns(3)
@@ -17,7 +23,8 @@ with st.form("entry",clear_on_submit=True):
 df=pd.DataFrame(st.session_state.records)
 income=df.loc[df.Type=="Income","Amount"].sum() if not df.empty else 0
 expense=df.loc[df.Type=="Expense","Amount"].sum() if not df.empty else 0
-m1,m2,m3=st.columns(3);m1.metric("Balance",f"Rp{income-expense:,.0f}");m2.metric("Income",f"Rp{income:,.0f}");m3.metric("Expenses",f"Rp{expense:,.0f}")
+balance=st.session_state.opening_balance+income-expense
+m1,m2,m3=st.columns(3);m1.metric("Balance",f"Rp{balance:,.0f}");m2.metric("Income",f"Rp{income:,.0f}");m3.metric("Expenses",f"Rp{expense:,.0f}")
 if not df.empty:
  st.plotly_chart(px.bar(df[df.Type=="Expense"].groupby("Category",as_index=False).Amount.sum(),x="Category",y="Amount",color="Category",template="plotly_dark",title="Expenses by category"),use_container_width=True)
  st.dataframe(df.sort_values("Date",ascending=False),hide_index=True,use_container_width=True)
